@@ -5,6 +5,7 @@ const cookieParser=require("cookie-parser")
 const cors=require('cors')
 const userRoute=require('./routes/user.route')
 const emailRoute=require("./routes/email.route")
+const aiRoute = require("./routes/ai.route");
 const app=express();
 const port=8080;
 dotenv.config();
@@ -21,7 +22,10 @@ app.use(cookieParser())
 
  //routes
  app.use("/api/user",userRoute);
- app.use("/api/email",emailRoute)
+ app.use("/api/email",emailRoute);
+ app.use("/api/ai", aiRoute); 
+ app.use("/uploads", express.static("uploads"));
+
 app.listen(port,()=>{
     console.log(`server runing on port ${port}`)
 })

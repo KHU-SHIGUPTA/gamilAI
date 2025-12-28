@@ -4,6 +4,7 @@ import { MdOutlineStarOutline } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setSelectedEmail } from "../redux/appSlice";
+import { MdPictureAsPdf } from "react-icons/md";
 const Email=({email})=>{
    const navigate=useNavigate();
    const dispatch=useDispatch();
@@ -11,6 +12,19 @@ const Email=({email})=>{
       dispatch(setSelectedEmail(email));
        navigate(`/mail/${email._id}`);
    }
+
+   const getPreviewText = (html) => {
+  if (!html) return "";
+
+  // remove all html tags
+  let text = html.replace(/<[^>]+>/g, "");
+
+  // convert &nbsp; and entities
+  text = text.replace(/&nbsp;/g, " ");
+
+  return text.trim();
+};
+
 
    // utils/date.js
 const getTimeAgo = (dateString) => {
@@ -51,7 +65,11 @@ const getTimeAgo = (dateString) => {
           </div>
 
           <div className="flex-1 ml-4">
-             <p>{email?.message}</p>
+             {/* <p>{email?.message}</p> */}
+             <p>{getPreviewText(email?.message)}</p>
+               {email?.attachments?.length > 0 && (
+                  <span className="text-blue-600">< MdPictureAsPdf size={25} color="black"/></span>
+               )}
           </div>
           <div className="flex-none text-gray text-sm">
             <p>{getTimeAgo(email?.createdAt)}</p>

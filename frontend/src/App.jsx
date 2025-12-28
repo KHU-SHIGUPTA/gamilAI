@@ -14,6 +14,8 @@ import  { Toaster } from 'react-hot-toast';
 import { useSelector } from 'react-redux'
 import WriteWithAI from './components/WriteWithAI'
 import GenEmail from './components/GenEmail'
+import ReplyEmail from './components/ReplyEmail'
+
 const appRouter = createBrowserRouter ([
  {
     path:"/",
@@ -45,20 +47,25 @@ const appRouter = createBrowserRouter ([
  }
 ])
 function App() {
-  
   return (
    <div className='h-screen bg-[#F6F8FC]'>
        <RouterProvider router={appRouter}/>
-       <div className='absolute w-[30%] bottom-0 right-8 z-10'>
+       <div className='w-[30%] absolute bottom-0 right-8 z-10'>
          <SendEmail/>
          <WriteWithAI/>
        </div>
+       <div className="absolute bottom-15 left-75  z-10 right-15">
+           <ReplyEmail />
+      </div>
+
        <div className='absolute w-[40%] left-90 top-30 z-10'>
         <GenEmail/>
        </div>
        <Toaster/>
    </div>
   )
+
+
 }
 
 export default App

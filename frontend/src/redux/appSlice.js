@@ -10,6 +10,9 @@ const appSlice =createSlice({
         emails: [],
         selectedEmail: null,
         searchText:"",
+         aiSubject: "",    // ⬅️ NEW
+         aiMessage: "", 
+         replyOpen: false,
     },
     reducers:{
         setOpen:(state,action)=>{
@@ -34,8 +37,19 @@ const appSlice =createSlice({
         },
         setSearchText:(state,action)=>{
             state.searchText=action.payload
-        }
+        },
+         setAiSubject:(state, action)=>{
+        state.aiSubject = action.payload;
+    },
+    setAiMessage:(state, action)=>{
+        state.aiMessage = action.payload;
+    },
+    setReplyOpen:(state, action)=>{
+        state.replyOpen = action.payload;
+      },
+      
     },
 })
-export const{setOpen,setOpenAi,setOpenGen,setAuthUser,setEmails,setSelectedEmail,setSearchText}=appSlice.actions;
+export const{setOpen,setOpenAi,setOpenGen,setAuthUser,setEmails,setSelectedEmail,setSearchText,setAiSubject,      // ⬅️ NEW
+  setAiMessage,setReplyOpen}=appSlice.actions;
 export default appSlice.reducer;

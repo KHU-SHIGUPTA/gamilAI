@@ -12,6 +12,14 @@ const emailSchema =new mongoose.Schema({
        type:String,
        required:true
     },
+    attachments:[
+  {
+    filename:String,
+    path:String,
+    cid:String
+  }
+]
+,
     userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User'

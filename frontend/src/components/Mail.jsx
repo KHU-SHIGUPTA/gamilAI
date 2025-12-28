@@ -13,13 +13,15 @@ import { FaCaretDown,FaRegSmile } from "react-icons/fa";
 import { BiPrinter } from "react-icons/bi";
 import { TfiNewWindow } from "react-icons/tfi";
 import { TbArrowBackUp } from "react-icons/tb";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import store from "../redux/store";
 import axios from "axios";
+import { setReplyOpen } from "../redux/appSlice";
 import toast from "react-hot-toast";
 
 const Mail=()=>{
   const navigate=useNavigate();
+  const dispatch = useDispatch();
   const {selectedEmail}=useSelector(store=>store.app);
   const params=useParams();
   const getTimeAgo = (dateString) => {
@@ -55,6 +57,22 @@ const Mail=()=>{
       console.log(error);
     }
   }
+
+ const BASE_URL = "http://localhost:8080";
+
+let emailHTML = selectedEmail?.message || "";
+
+// replace cid with file URL
+if (selectedEmail?.attachments?.length) {
+  selectedEmail.attachments.forEach(file => {
+    const cid = file.filename.replace(/\s+/g, "_");
+    const fileUrl = `${BASE_URL}/${file.path}`;
+
+    emailHTML = emailHTML.replaceAll(`cid:${cid}`, fileUrl);
+  });
+}
+
+
   return(
     <div className="flex-1 bg-white rounded-xl mx-5">
       <div className="flex items-center justify-between px-4">
@@ -135,14 +153,94 @@ const Mail=()=>{
       <div className="flex items-center gap-4">
         <MdOutlineStarOutline size={18}/>
         <FaRegSmile size={15}/>
-         <TbArrowBackUp size={18}/>
+         <TbArrowBackUp size={18}  className="cursor-pointer hover:text-blue-600"
+  onClick={() => dispatch(setReplyOpen(true))}/>
          <BiDotsVerticalRounded  size={18}/>
       </div>
       </div>
    </div>
-   <div className="my-10">
+   {/* <div className="my-10">
       <p>{selectedEmail?.message}</p>
-   </div>
+   </div> */}
+
+   <div className="my-10">
+
+  {/* EMAIL BODY */}
+
+  {/* <div
+    dangerouslySetInnerHTML={{ __html: selectedEmail?.message }}
+    className="text-[15px] leading-relaxed"
+  /> */}
+
+ <div
+  dangerouslySetInnerHTML={{ __html: emailHTML }}
+  className="text-[15px] leading-relaxed"
+/>
+
+
+  {/* ATTACHMENTS SECTION */}
+  {selectedEmail?.attachments?.length > 0 && (
+    <div className="mt-6">
+      <h3 className="text-gray-700 mb-2 font-medium">
+        Attachments ({selectedEmail.attachments.length})
+      </h3>
+
+      <div className="flex gap-4 flex-wrap">
+        {selectedEmail.attachments.map((file, index) => {
+          const url = `http://localhost:8080/${file.path}`;
+
+          return (
+            <a
+              key={index}
+              href={url}
+              target="_blank"
+              rel="noreferrer"
+              className="border border-gray-300 rounded-lg p-3  shadow-sm bg-gray-50 hover:bg-gray-100 
+                        transition flex flex-col items-center w-[160px]"
+            >
+
+              {/* PDF PREVIEW */}
+              {file.filename.endsWith(".pdf") && (
+                <>
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/337/337946.png"
+                    alt="pdf"
+                    className="w-12 m-2"
+                  />
+                  <span className="text-sm text-gray-700 text-center truncate">
+                    {file.filename}
+                  </span>
+                </>
+              )}
+
+              {/* IMAGE PREVIEW */}
+              {file.filename.match(/\.(jpg|jpeg|png|gif|webp)$/i) && (
+                <>
+                  <img
+                    src={url}
+                    alt="img"
+                    className="w-full h-[120px] object-cover rounded"
+                  />
+                  <span className="text-sm mt-1 text-gray-700 truncate">
+                    {file.filename}
+                  </span>
+                </>
+              )}
+
+              {/* OTHER FILES */}
+              {!file.filename.match(/\.(pdf|jpg|jpeg|png|gif|webp)$/i) && (
+                <span className="text-sm text-gray-700 truncate">
+                  {file.filename}
+                </span>
+              )}
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  )}
+</div>
+
    </div>
 </div>
 
