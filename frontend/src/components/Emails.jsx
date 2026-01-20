@@ -9,12 +9,6 @@ const Emails = () => {
   const [filterEmail, setFilterEmail] = useState(emails);
 
   useEffect(()=>{
-  //   const filteredEmail = emails.filter((email)=>{
-  //     return email.subject?.toLowerCase().includes(searchText.toLowerCase()) || email.to?.toLowerCase().includes(searchText.toLowerCase()) || email.message?.toLowerCase().includes(searchText.toLowerCase())
-  //   });
-  //   setFilterEmail(filteredEmail);
-  // 
-
   const filteredEmail = emails.filter((email) => {
       const subject = email.subject || "";
       const to = email.to || "";

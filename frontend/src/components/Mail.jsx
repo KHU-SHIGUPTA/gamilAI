@@ -22,7 +22,8 @@ import toast from "react-hot-toast";
 const Mail=()=>{
   const navigate=useNavigate();
   const dispatch = useDispatch();
-  const {selectedEmail}=useSelector(store=>store.app);
+  const {selectedEmail,user}=useSelector(store=>store.app);
+   
   const params=useParams();
   const getTimeAgo = (dateString) => {
   if (!dateString) return "";
@@ -46,17 +47,58 @@ const Mail=()=>{
 
   return "Just now";
 };
-  const deleteHandler=async(e)=>{
-    try {
-      const res=await axios.delete(`http://localhost:8080/api/email/${params.id}`,{
-        withCredentials:true
-      })
+
+  // const deleteHandler=async(e)=>{
+  //   try {
+  //     const res=await axios.delete(`http://localhost:8080/api/email/${params.id}`,{
+  //       withCredentials:true
+  //     })
+
+  //     toast.success(res.data.message);
+  //     navigate("/")
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+  const deleteHandler = async () => {
+  try {
+    // ⭐ Manual DB email
+    if (selectedEmail?._id) {
+      const res = await axios.delete(
+        `http://localhost:8080/api/email/${selectedEmail._id}`,
+        { withCredentials: true }
+      );
+
       toast.success(res.data.message);
-      navigate("/")
-    } catch (error) {
-      console.log(error);
+      navigate("/");
+      return;
     }
+
+    // ⭐ Gmail Email
+    if (selectedEmail?.gmailId) {
+      const res = await axios.delete(
+        `http://localhost:8080/api/email/none`,
+        {
+          withCredentials: true,
+          data: {
+            gmailId: selectedEmail.gmailId
+          }
+        }
+      );
+
+      toast.success(res.data.message);
+      navigate("/");
+      return;
+    }
+
+    toast.error("Email ID missing");
+
+  } catch (err) {
+    console.log("DELETE ERROR", err);
+    toast.error("Failed to delete email");
   }
+};
+
 
  const BASE_URL = "http://localhost:8080";
 
@@ -137,11 +179,37 @@ if (selectedEmail?.attachments?.length) {
    <div className="text-black text-sm mt-4 flex justify-between items-center ">
      
      <div>
-       <h1 className="text-black font-semibold">{selectedEmail?.to}</h1>
+      {/* <h1 className="text-black font-semibold">
+            {selectedEmail?.from || selectedEmail?.to}
+            
+      </h1>
       <div className="text-gray-500 flex items-center gap-2">
-           <span>to me</span>
+            <span>
+    to {selectedEmail?.to && selectedEmail?.from ? "me" : selectedEmail?.to}
+    
+  </span>
            <FaCaretDown size={15} />
       </div>
+       */}
+<h1 className="text-black font-semibold">
+   
+  {selectedEmail?.from}
+</h1>
+
+<div className="text-gray-500 flex items-center gap-2">
+  <span>
+    {/* to {selectedEmail?.sender === selectedEmail?.from
+      ? selectedEmail?.to
+      : "me"} */}
+
+      to {selectedEmail.mailType === "sent" ? selectedEmail.to : "me"}
+
+  </span>
+  <FaCaretDown size={15} />
+</div>
+
+
+
       </div>
 
      

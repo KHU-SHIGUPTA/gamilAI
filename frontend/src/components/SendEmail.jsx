@@ -120,15 +120,22 @@ const SendEmail = () => {
   const [formData, setFormData] = useState(initialFormData);
 
   // When compose opens and we have AI-generated text, pre-fill subject & message
-  useEffect(() => {
-    if (open && (aiSubject || aiMessage)) {
-      setFormData((prev) => ({
-        ...prev,
-        subject: aiSubject || prev.subject,
-        message: aiMessage || prev.message,
-      }));
+ useEffect(() => {
+  if (open && (aiSubject || aiMessage)) {
+
+    setFormData((prev) => ({
+      ...prev,
+      subject: aiSubject || prev.subject,
+      message: aiMessage || prev.message,
+    }));
+
+    // 👇 THIS is the missing magic
+    if (textareaRef?.current) {
+      textareaRef.current.innerHTML = aiMessage || "";
     }
-  }, [open, aiSubject, aiMessage]);
+  }
+}, [open, aiSubject, aiMessage]);
+
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
@@ -164,14 +171,23 @@ setShowLinkPopup(false);
 
   const submitHandler = async (e) => {
   e.preventDefault();
+  const editor = textareaRef?.current;
+  const htmlBody = editor?.innerHTML || "";
+ const textBody =
+    editor?.innerText?.replace(/\u200B/g, "") // zero-width fix
+      ?.replace(/&nbsp;/g, " ")
+      ?.trim() || "";
 
-  if (!formData.to || !formData.subject || !message.trim()) {
+  
+  if (!formData.to || !formData.subject || !textBody) {
     toast.error("All fields are required");
     return;
   }
 
+
   try {
-    let finalMessage = message;
+    let finalMessage = htmlBody || aiMessage || message;
+
 
     const editor = textareaRef.current;
     const imgs = editor.querySelectorAll("img");
@@ -189,6 +205,9 @@ setShowLinkPopup(false);
 
     attachments.forEach(file => form.append("attachments", file));
 
+    console.log("FINAL MESSAGE BEFORE SEND ===>", finalMessage);
+for (let p of form.entries()) console.log("FORM DATA ===>", p);
+
     const res = await axios.post(
       "http://localhost:8080/api/email/create",
       form,
@@ -197,7 +216,6 @@ setShowLinkPopup(false);
         headers: { "Content-Type": "multipart/form-data" },
       }
     );
-
     if (res.data?.email) {
       dispatch(setEmails([...emails, res.data.email]));
     }
@@ -306,13 +324,6 @@ setShowLinkPopup(false);
         onInput={(e) => setMessage(e.currentTarget.innerHTML)}
       ></div>
 
-
-        {/* <button
-          type="submit"
-          className="bg-blue-700 rounded-full px-5 py-1 w-fit text-white"
-        >
-          Send
-        </button> */}
 
         {/*link popup ui*/}
         {showLinkPopup && (

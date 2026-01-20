@@ -112,8 +112,6 @@ const handleImageSelect = (e) => {
   }, [replyOpen]);
  
 
-  if (!replyOpen || !selectedEmail) return null;
-
   const submitHandler = async (e) => {
     e.preventDefault();
 
@@ -158,15 +156,23 @@ await axios.post(
       toast.error("Failed to send reply");
     }
   };
+ if (!replyOpen || !selectedEmail || !user) return null;
 
   return (
     <div className="flex items-start gap-3 w-full">
-      <Avatar
+      {/* <Avatar
       src={user.profilePhoto}
       size="35"
       round={true}
       className="shrink-0 mt-2"
-    />
+    /> */}
+    <Avatar
+  src={user?.profilePhoto || "https://avatar.iran.liara.run/public/girl"}
+  size="35"
+  round={true}
+  className="shrink-0 mt-2"
+/>
+
     <div className="flex-1  w-full mt-4 shadow-md shadow-slate-600 rounded-t-md bg-white">
       {/* Header */}
       <div className="flex  w-full items-center justify-between px-4 py-2">

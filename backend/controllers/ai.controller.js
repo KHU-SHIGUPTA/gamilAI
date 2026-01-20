@@ -1,48 +1,4 @@
 const axios = require("axios");
-
-// module.exports.generateEmailWithAI = async (req, res) => {
-//   try {
-//     const { prompt } = req.body;
-
-//     if (!prompt) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Prompt is required",
-//       });
-//     }
-
-//     const flaskUrl = process.env.GEMINI_FLASK_LITE_URL;
-//     if (!flaskUrl) {
-//       return res.status(500).json({
-//         success: false,
-//         message: "GEMINI_FLASK_LITE_URL is not set in backend .env",
-//       });
-//     }
-
-//     // Call Gemini Flask Lite
-//     const response = await axios.post(flaskUrl, {
-//       input: prompt, // adjust key name if Flask expects something else
-//     });
-
-//     // Adjust this depending on the JSON structure returned by Flask Lite
-//     const generatedText =
-//       response.data?.text || response.data?.generated_text || response.data;
-
-//     return res.status(200).json({
-//       success: true,
-//       generatedEmail: generatedText,
-//     });
-//   } catch (error) {
-//     console.error("Gemini AI error:", error.response?.data || error.message);
-//     return res.status(500).json({
-//       success: false,
-//       message: "Failed to generate email with AI",
-//       error: error.message,
-//     });
-//   }
-// };
-
-
 module.exports.generateEmailWithAI = async (req, res) => {
   try {
     const { prompt } = req.body;

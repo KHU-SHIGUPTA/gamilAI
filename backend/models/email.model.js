@@ -1,5 +1,10 @@
 const mongoose=require("mongoose");
 const emailSchema =new mongoose.Schema({
+    from: {
+  type: String,
+//   default: ""
+},
+
     to:{
         type:String,
         required:true
@@ -19,7 +24,11 @@ const emailSchema =new mongoose.Schema({
     cid:String
   }
 ]
-,
+,mailType: {
+  type: String,
+  enum: ["sent", "inbox"],
+  required: true
+},
     userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User'

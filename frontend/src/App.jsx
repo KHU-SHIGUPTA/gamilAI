@@ -15,6 +15,10 @@ import { useSelector } from 'react-redux'
 import WriteWithAI from './components/WriteWithAI'
 import GenEmail from './components/GenEmail'
 import ReplyEmail from './components/ReplyEmail'
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setAuthUser } from "./redux/appSlice";
+import GoogleSuccess from "./components/GoogleSuccess";
 
 const appRouter = createBrowserRouter ([
  {
@@ -44,9 +48,33 @@ const appRouter = createBrowserRouter ([
  {
   path:'/genai',
   element:<GenEmail/>
- }
+ },{
+  path: "/google-success",
+  element: <GoogleSuccess />
+}
+
+
 ])
 function App() {
+  const dispatch = useDispatch();
+
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const logged = params.get("logged");
+
+  if (logged === "google") {
+    axios.get("http://localhost:8080/api/email/getAllEmail", {
+      withCredentials: true
+    })
+    .then(() => {
+        // user is authenticated if this worked
+        dispatch(setAuthUser({ email: "google_user" })); 
+    })
+    .catch(() => console.log("Google login failed"));
+  }
+
+}, []);
+
   return (
    <div className='h-screen bg-[#F6F8FC]'>
        <RouterProvider router={appRouter}/>
@@ -64,8 +92,6 @@ function App() {
        <Toaster/>
    </div>
   )
-
-
 }
 
 export default App

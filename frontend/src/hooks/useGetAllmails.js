@@ -12,6 +12,8 @@ const useGetAllmails=()=>{
                 const res=await axios.get("http://localhost:8080/api/email/getAllEmail",{
                     withCredentials:true 
                 });
+                
+
                 dispatch(setEmails(res.data.emails))
             } catch (error) {
                 console.log(error);

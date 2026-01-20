@@ -14,7 +14,14 @@ const userSchema =new mongoose.Schema({
     },profilePhoto:{
         type:String,
         required:true
-    }
+    },
+    googleRefreshToken: {
+       type: String,
+       //default:null
+       require:false
+}
+,googleName: String,
+  googleAvatar: String
 },{timestamps:true})
 const User=mongoose.model("user",userSchema)
 module.exports=User
