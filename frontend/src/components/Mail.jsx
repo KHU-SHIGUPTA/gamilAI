@@ -1,4 +1,4 @@
-import React from "react";
+import React ,{useState}from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import { BiArchiveIn } from "react-icons/bi";
@@ -18,12 +18,41 @@ import store from "../redux/store";
 import axios from "axios";
 import { setReplyOpen } from "../redux/appSlice";
 import toast from "react-hot-toast";
-
+import { FaWandMagicSparkles } from "react-icons/fa6";
+import { MdOutlineSummarize } from "react-icons/md";
+import { RiArrowDropDownLine } from "react-icons/ri";
 const Mail=()=>{
   const navigate=useNavigate();
   const dispatch = useDispatch();
   const {selectedEmail,user}=useSelector(store=>store.app);
-   
+   //summary
+   const [summary, setSummary] = useState("");
+const [loadingAI, setLoadingAI] = useState(false);
+const [showSummary, setShowSummary] = useState(false);
+
+const summarizeWithAI = async () => {
+  try {
+    setLoadingAI(true);
+    setSummary("");
+
+    const res = await axios.post(
+      "http://localhost:8080/api/ai/summarize",
+      { text: selectedEmail.message },
+      { withCredentials: true }
+    );
+
+    if (res.data.success) {
+   //   setSummary(res.data.text);
+   setSummary(res.data.summary.text);
+  setShowSummary(true); // ⭐ OPEN summary
+    }
+  } catch (err) {
+    alert("Failed to summarize email");
+  } finally {
+    setLoadingAI(false);
+  }
+};
+
   const params=useParams();
   const getTimeAgo = (dateString) => {
   if (!dateString) return "";
@@ -48,18 +77,6 @@ const Mail=()=>{
   return "Just now";
 };
 
-  // const deleteHandler=async(e)=>{
-  //   try {
-  //     const res=await axios.delete(`http://localhost:8080/api/email/${params.id}`,{
-  //       withCredentials:true
-  //     })
-
-  //     toast.success(res.data.message);
-  //     navigate("/")
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
   const deleteHandler = async () => {
   try {
     // ⭐ Manual DB email
@@ -170,12 +187,45 @@ if (selectedEmail?.attachments?.length) {
             <p className="text-xs  pb-1 pr-1 hover:bg-gray-600 hover:text-white">x</p>
           </div>
       </div>
-       <div className="text-gray-700 flex items-center gap-4 hover:bg-gray-300 hover:roundedfull">
+       <div className="text-gray-700 flex items-center gap-4">
+         <button
+           onClick={summarizeWithAI}
+              type="button"
+              className="flex items-center gap-2 bg-[#C2E7FF] font-bold px-2 py-2 rounded-md  transition"
+            >
+            <FaWandMagicSparkles size={18}/> 
+            {loadingAI ? "Summarizing..." : "AI summarizer"}
+            </button>
              <BiPrinter size={18}/>
              <TfiNewWindow size={18}/>
           </div>
     </div>
-   
+   {/* {summary && (
+  <div className="mt-4 p-3 bg-gray-100 rounded">
+    <h3 className="font-semibold mb-2 flex items-center gap-2"><MdOutlineSummarize size={18}/>Summary</h3>
+    <pre className="whitespace-pre-wrap text-sm">{summary}</pre>
+  </div>
+)} */}
+
+ {showSummary && summary && (
+  <div className="mt-4 p-3 bg-gray-100 rounded">
+    {/* <h3 className="font-semibold mb-2 flex items-center gap-2"><MdOutlineSummarize size={18}/>Summary</h3> */}
+    <div className="flex justify-between items-center mb-2">
+      <h3 className="font-semibold flex items-center gap-2"><MdOutlineSummarize size={18}/>Summary</h3>
+
+      {/* Collapse button */}
+      <button
+        onClick={() => setShowSummary(false)}
+        className="text-gray-600 hover:text-black text-lg font-bold"
+        title="Collapse summary"
+      >
+        <RiArrowDropDownLine size={20}/>
+      </button>
+    </div>
+    <pre className="whitespace-pre-wrap text-sm">{summary}</pre>
+  </div>
+)}
+
    <div className="text-black text-sm mt-4 flex justify-between items-center ">
      
      <div>

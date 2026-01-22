@@ -307,15 +307,6 @@ setShowLinkPopup(false);
           </button>
         </div>
 
-        {/* <textarea
-          name="message"
-          onChange={changeHandler}
-          value={formData.message}
-          placeholder="Message"
-          rows={10}
-          cols={30}
-          className="outline-none py-1"
-        /> */}
         
          <div
         ref={textareaRef}

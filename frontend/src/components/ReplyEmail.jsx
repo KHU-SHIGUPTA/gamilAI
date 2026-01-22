@@ -17,6 +17,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import Avatar from 'react-avatar';
 import { useRef } from "react";
 import EmojiPicker from "emoji-picker-react";
+import { FaPen } from "react-icons/fa";
 
 const ReplyEmail = () => {
   const dispatch = useDispatch();
@@ -173,9 +174,9 @@ await axios.post(
   className="shrink-0 mt-2"
 />
 
-    <div className="flex-1  w-full mt-4 shadow-md shadow-slate-600 rounded-t-md bg-white">
-      {/* Header */}
-      <div className="flex  w-full items-center justify-between px-4 py-2">
+   <div className="flex-1  w-full mt-4 shadow-md shadow-slate-600 rounded-t-md bg-white">
+    
+      {/*  <div className="flex  w-full items-center justify-between px-4 py-2">
         <div className="text-sm text-gray-600">
           <div className="flex items-center">
             <div className="flex items-center  hover:bg-[#eee] border-rounded p-2" >
@@ -185,14 +186,59 @@ await axios.post(
                 </div>
             <span className="text-gray-600 text-md hover:bg-white">{selectedEmail.to}</span>
           </div>
-
+         
         </div>
+          <button
+                    type="button" // ⬅️ important so it doesn't submit the form
+                    onClick={() => {
+                      dispatch(setOpenAi(true));
+                      dispatch(setOpen(false));
+                    }}
+                    className="flex items-center justify-center gap-2 bg-[#C2E7FF] font-bold px-4 py-2 rounded-md hover:bg-[#fff] transition"
+                  >
+                    <FaPen /> Write with AI
+                  </button>
         <RxCross2
           size={18}
           className="cursor-pointer text-gray-500 hover:text-black"
           onClick={() => dispatch(setReplyOpen(false))}
         />
-      </div>
+      </div> */}
+
+  <div className="flex w-full items-center justify-between px-4 py-2">
+  
+  {/* LEFT */}
+  <div className="flex items-center text-sm text-gray-600">
+    <div className="flex items-center hover:bg-[#eee] rounded p-2">
+      <TbArrowBackUp size={20} />
+      <FaCaretDown size={20} />
+    </div>
+    <span className="ml-2 text-gray-600 text-md hover:bg-white">
+      {selectedEmail.to}
+    </span>
+  </div>
+
+  {/* RIGHT (BUTTON + CROSS) */}
+  <div className="flex items-center gap-3">
+    <button
+      type="button"
+      onClick={() => {
+        dispatch(setOpenAi(true));
+        dispatch(setOpen(false));
+      }}
+      className="flex items-center gap-2 bg-[#C2E7FF] font-bold px-4 py-2 rounded-md hover:bg-white transition"
+    >
+      <FaPen /> Write with AI
+    </button>
+
+    <RxCross2
+      size={18}
+      className="cursor-pointer text-gray-500 hover:text-black"
+      onClick={() => dispatch(setReplyOpen(false))}
+    />
+  </div>
+</div>
+
 
       {/* Message box */}
       <form onSubmit={submitHandler}>
