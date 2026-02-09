@@ -136,7 +136,9 @@ if (selectedEmail?.attachments?.length) {
 
 
   return(
-    <div className="flex-1 bg-white rounded-xl mx-5">
+    // <div className="flex-1 bg-white rounded-xl mx-5">
+    <div className="flex-1 bg-white rounded-xl mx-2 md:mx-5 overflow-x-hidden">
+
       <div className="flex items-center justify-between px-4">
        <div className="flex items-center gap-2 text-gray-700 py-4">
          <div onClick={()=>{
@@ -181,7 +183,9 @@ if (selectedEmail?.attachments?.length) {
     </div>
 
 
-   <div className="h-[90vh] overflow-y-auto p-4">
+   {/* <div className="h-[90vh] overflow-y-auto p-4"> */}
+    <div className="h-[90vh] overflow-y-auto p-2 md:p-4">
+
     <div className="flex items-center justify-between bg-white gap-1">
       <div className="flex items-center gap-3">
           <h1 className="text-xl font-medium">{selectedEmail?.subject}</h1>

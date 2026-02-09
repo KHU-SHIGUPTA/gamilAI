@@ -14,7 +14,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { PiSignOutBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
-export default function Navbar(){
+export default function Navbar({ onMenuClick }){
   const [text,setText]=useState();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const {user} =useSelector(store=>store.app);
@@ -47,12 +47,26 @@ export default function Navbar(){
 
     return (
       <div className='bg-[#f9f9f9] sticky top-0 z-50 shadow'>
-       <div className="flex items-center justify-between mx-3 h-16 ">
-            <div className="flex items-center gap-10">
-                  <div className="flex items-center gap-2">
-                    <div className='p-3 hover:bg-gray-200 rounded-full cursor-pointer'>
+       {/* <div className="flex items-center justify-between mx-3 h-16 "> */}
+       <div className="flex items-center justify-between mx-2 md:mx-3 h-16">
+
+            {/* <div className="flex items-center gap-10"> */}
+            <div className="flex items-center gap-3 md:gap-10">
+
+                  {/* <div className="flex items-center gap-2"> */}
+                  <div className="flex items-center gap-1 md:gap-2">
+
+                    {/* <div className='p-3 hover:bg-gray-200 rounded-full cursor-pointer'>
                         <RxHamburgerMenu size={20} />   
-                    </div>
+                    </div> */}
+
+                    <div
+  className="p-3 hover:bg-gray-200 rounded-full cursor-pointer md:hidden"
+  onClick={onMenuClick}
+>
+  <RxHamburgerMenu size={20} />
+</div>
+
                     <img className='w-8 h-8 object-contain' src="https://mailmeteor.com/logos/assets/PNG/Gmail_Logo_512px.png" alt="logo" />
                     <h1 className='text-2xl text-gray-500 font-medium'>Gmail</h1>
                   </div>
@@ -60,7 +74,9 @@ export default function Navbar(){
              {
               user&&( 
               <>
-              <div className="w-[50%] mr-60">
+              {/* <div className="w-[50%] mr-60"> */}
+              <div className="hidden md:block md:w-[50%] md:mr-60">
+
                 <div className="flex items-center bg-[#E9EEF6] px-2 py-3 rounded-full gap-3">
                  <div className="ml-3">
                    <IoSearchSharp size={20} color="#555555"/>

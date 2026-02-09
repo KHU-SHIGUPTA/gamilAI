@@ -37,7 +37,9 @@ const SideBar=()=>{
 ]
 const dispatch=useDispatch();
     return(
-        <div className="w-[15%] sticky top-0 h-screen overflow-y-auto ">
+        // <div className="w-[15%] sticky top-0 h-screen overflow-y-auto ">
+
+<div className="w-[240px] strink-0 sticky top-0 h-screen overflow-y-auto ">
 
            <div className="p-3">
             <button onClick={()=>dispatch(setOpen(true))}className="flex items-center gap-2 bg-[#C2E7FF] p-4 rounded-2xl hover:shadow-md m-2 font-medium"><LuPencil size={24}/>

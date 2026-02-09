@@ -69,8 +69,15 @@ const getTimeAgo = (dateString) => {
 };
 
    return (
-    <div onClick={openMail} className="flex items-center justify-between border-b border-gray-200 px-4 py-3 text-sm hover:cursor-pointer hover:shadow-md">
-          <div className="flex items-center gap-2">
+   //  <div onClick={openMail} className="flex items-center justify-between border-b border-gray-200 px-4 py-3 text-sm hover:cursor-pointer hover:shadow-md">
+   <div
+  onClick={openMail}
+  className="flex flex-col md:flex-row md:items-center justify-between border-b border-gray-200 px-2 md:px-4 py-2 md:py-3 text-sm hover:cursor-pointer hover:shadow-md"
+>
+
+          {/* <div className="flex items-center gap-2"> */}
+          <div className="flex items-center gap-2 mb-1 md:mb-0">
+
              <div className="text-gray-500">
                  <FaRegSquare size={15}/>
              </div>
@@ -109,7 +116,9 @@ const getTimeAgo = (dateString) => {
   )}
 </div>
 
-          <div className="flex-none text-gray text-sm">
+          {/* <div className="flex-none text-gray text-sm"> */}
+          <div className="flex-none text-gray text-sm mt-1 md:mt-0 self-end md:self-auto">
+
             <p>{getTimeAgo(email?.createdAt)}</p>
           </div>
     </div>

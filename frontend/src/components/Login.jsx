@@ -43,7 +43,12 @@ import { setAuthUser } from "../redux/appSlice";
 
      return(
         <div className="flex items-center justify-center w-screen pt-20">
-             <form onSubmit={submitHandler} className="flex flex-col gap-3 bg-white p-3 w-[20%] bottom-3">
+             {/* <form onSubmit={submitHandler} className="flex flex-col gap-3 bg-white p-3 w-[20%] bottom-3"> */}
+             <form
+  onSubmit={submitHandler}
+  className="flex flex-col gap-3 bg-white p-4 w-full max-w-[380px]"
+>
+
                 <h1 className="font-bold text-2xl uppercase my-2 text-center">Login </h1>
                  <button type="button" onClick={loginWithGoogle} className="border border-gray-700 rounded-md flex items-center gap-2 px-4 py-1 ">
                     <FcGoogle size={35} className="left-3 top-8"/>
