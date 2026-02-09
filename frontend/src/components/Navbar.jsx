@@ -46,7 +46,7 @@ export default function Navbar(){
   }, []);
 
     return (
-      <div className='bg-[#f9f9f9]'>
+      <div className='bg-[#f9f9f9] sticky top-0 z-50 shadow'>
        <div className="flex items-center justify-between mx-3 h-16 ">
             <div className="flex items-center gap-10">
                   <div className="flex items-center gap-2">

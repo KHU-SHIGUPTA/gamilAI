@@ -28,7 +28,7 @@ const initialFormData = {
 };
 
 const SendEmail = () => {
-  const { open, emails, aiSubject, aiMessage } = useSelector(
+  const { open, emails,aiSubject, aiMessage } = useSelector(
     (store) => store.app
   );
   const [message, setMessage] = useState("");
@@ -260,6 +260,7 @@ setShowLinkPopup(false);
         <div className="flex items-center gap-3">
           <BsDash size={18} />
           <RiExpandDiagonalSLine size={18} />
+
           <div
             onClick={handleClose} // ⬅️ just close & clear, no refresh
             className="cursor-pointer"
@@ -271,9 +272,10 @@ setShowLinkPopup(false);
 
       <form
         onSubmit={submitHandler}
-        className="flex flex-col p-3 gap-2"
+        className="flex flex-col p-3 gap-2  relative z-10"
         // ⚠️ Make sure there is NO "action" attr here
       >
+       
         <input
           name="to"
           onChange={changeHandler}
@@ -301,7 +303,7 @@ setShowLinkPopup(false);
               dispatch(setOpenAi(true));
               dispatch(setOpen(false));
             }}
-            className="flex items-center justify-center gap-2 bg-[#C2E7FF] font-bold px-4 py-2 rounded-md hover:bg-[#fff] transition"
+            className=" flex items-center justify-center gap-2 bg-[#C2E7FF] font-bold px-4 py-2 rounded-md hover:bg-[#fff] transition"
           >
             <FaPen /> Write with AI
           </button>
@@ -311,7 +313,8 @@ setShowLinkPopup(false);
          <div
         ref={textareaRef}
         contentEditable
-        className="w-full px-4 py-2 outline-none text-md min-h-[150px]"
+        className="w-full px-4 py-2 outline-none text-md min-h-[150px]  max-h-[300px]  overflow-y-auto"
+        style={{ whiteSpace: "pre-wrap" }}
         onInput={(e) => setMessage(e.currentTarget.innerHTML)}
       ></div>
 
@@ -532,6 +535,7 @@ setShowLinkPopup(false);
           }} ><GrGallery size={18} color="#444746"/></span>
                     <span className="cursor-pointer"><BsPenFill size={18} color="#444746"/></span>
                     <span className="cursor-pointer"><BsThreeDotsVertical size={18} color="#444746"/></span>
+           
                   </div>
                    <div className="ml-auto">
                       <span className="cursor-pointer hover:text-black"
@@ -540,13 +544,14 @@ setShowLinkPopup(false);
                       handleClose();
                      }}><RiDeleteBin6Line  size={18} color="#444746"/></span>
                   </div>
+
                 </div>
 
 
       </form>
 
       {/* keep this if you mount WriteWithAI here */}
-      <WriteWithAI />
+      {/* <WriteWithAI /> */}
     </div>
   );
 };

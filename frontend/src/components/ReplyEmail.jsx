@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { RxCross2 } from "react-icons/rx";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector} from "react-redux";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { setReplyOpen,setSelectedEmail } from "../redux/appSlice";
@@ -18,12 +18,97 @@ import Avatar from 'react-avatar';
 import { useRef } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { FaPen } from "react-icons/fa";
-
+import { useParams } from "react-router-dom";
 const ReplyEmail = () => {
   const dispatch = useDispatch();
+   const [message, setMessage] = useState("");
+ const { mailId } = useParams();
+
+
   const { replyOpen,selectedEmail,user } = useSelector(
     (store) => store.app
   );
+//   useEffect(() => {
+//   if (selectedEmail) {
+//     // reset AI state when user opens a different email
+//     setMessage("");
+//     setAiPrompt("");
+//     setShowAIReply(false);
+//   }
+// }, [selectedEmail?._id]);
+
+useEffect(() => {
+  if (selectedEmail) {
+    setMessage("");
+    setAiPrompt("");
+    setShowAIReply(false);
+  }
+}, [selectedEmail?._id || selectedEmail?.gamilId]);
+
+//reply ai
+const [showAIReply, setShowAIReply] = useState(false);
+const [aiPrompt, setAiPrompt] = useState("");
+const [aiLoading, setAiLoading] = useState(false);
+
+const handleAIReply = async () => {
+  try {
+    setAiLoading(true);
+  if (!aiPrompt.trim()) {
+  toast.error("Please enter a prompt for AI");
+  return;
+}
+
+    const res = await axios.post(
+      "http://localhost:8080/api/ai/reply",
+      {
+        prompt: aiPrompt,
+        email: {
+          subject: selectedEmail.subject,
+          message: selectedEmail.message,
+          attachments: selectedEmail.attachments
+        }
+      },
+      { withCredentials: true }
+    );
+
+    
+    if (res.data.success) {
+  const aiText = res.data.text;
+
+  // ✅ update state
+  setMessage(aiText);
+console.log(res.data.text);
+  // ✅ update editor UI
+  if (textareaRef.current) {
+    textareaRef.current.innerHTML = aiText;
+  }
+
+  setShowAIReply(false);
+  setAiPrompt("");
+}
+
+  } catch {
+    alert("Failed to generate AI reply");
+  } finally {
+    setAiLoading(false);
+  }
+};
+
+
+useEffect(() => {
+  if (!replyOpen) {
+    setShowAIReply(false);
+    setAiPrompt("");
+  }
+}, [replyOpen]);
+
+const closeReply = () => {
+  setShowAIReply(false);   // ⭐ close AI UI
+  setAiPrompt("");         // ⭐ reset prompt
+  dispatch(setReplyOpen(false));
+};
+
+
   //attach
 const fileInputRef = useRef(null);
 const [attachments, setAttachments] = useState([]);
@@ -106,7 +191,7 @@ const handleImageSelect = (e) => {
 
 
 //message content
-  const [message, setMessage] = useState("");
+
 
   useEffect(() => {
     if (!replyOpen) setMessage("");
@@ -161,12 +246,6 @@ await axios.post(
 
   return (
     <div className="flex items-start gap-3 w-full">
-      {/* <Avatar
-      src={user.profilePhoto}
-      size="35"
-      round={true}
-      className="shrink-0 mt-2"
-    /> */}
     <Avatar
   src={user?.profilePhoto || "https://avatar.iran.liara.run/public/girl"}
   size="35"
@@ -175,35 +254,6 @@ await axios.post(
 />
 
    <div className="flex-1  w-full mt-4 shadow-md shadow-slate-600 rounded-t-md bg-white">
-    
-      {/*  <div className="flex  w-full items-center justify-between px-4 py-2">
-        <div className="text-sm text-gray-600">
-          <div className="flex items-center">
-            <div className="flex items-center  hover:bg-[#eee] border-rounded p-2" >
-                <TbArrowBackUp size={20}/>
-                <FaCaretDown size={20}/>
-      
-                </div>
-            <span className="text-gray-600 text-md hover:bg-white">{selectedEmail.to}</span>
-          </div>
-         
-        </div>
-          <button
-                    type="button" // ⬅️ important so it doesn't submit the form
-                    onClick={() => {
-                      dispatch(setOpenAi(true));
-                      dispatch(setOpen(false));
-                    }}
-                    className="flex items-center justify-center gap-2 bg-[#C2E7FF] font-bold px-4 py-2 rounded-md hover:bg-[#fff] transition"
-                  >
-                    <FaPen /> Write with AI
-                  </button>
-        <RxCross2
-          size={18}
-          className="cursor-pointer text-gray-500 hover:text-black"
-          onClick={() => dispatch(setReplyOpen(false))}
-        />
-      </div> */}
 
   <div className="flex w-full items-center justify-between px-4 py-2">
   
@@ -222,14 +272,12 @@ await axios.post(
   <div className="flex items-center gap-3">
     <button
       type="button"
-      onClick={() => {
-        dispatch(setOpenAi(true));
-        dispatch(setOpen(false));
-      }}
+      onClick={() => setShowAIReply(true)}
       className="flex items-center gap-2 bg-[#C2E7FF] font-bold px-4 py-2 rounded-md hover:bg-white transition"
     >
       <FaPen /> Write with AI
     </button>
+   
 
     <RxCross2
       size={18}
@@ -242,20 +290,15 @@ await axios.post(
 
       {/* Message box */}
       <form onSubmit={submitHandler}>
-        {/* <textarea
-          ref={textareaRef}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          rows={6}
-          className="w-full px-4 py-2 outline-none resize-none text-sm"
-        /> */}
        
-       <div
+        <div
         ref={textareaRef}
         contentEditable
-        className="w-full px-4 py-2 outline-none text-md min-h-[150px]"
+        className="w-full px-4 py-2 outline-none text-md min-h-[150px] max-h-[300px] overflow-y-auto"
+        style={{ whiteSpace: "pre-wrap" }}
         onInput={(e) => setMessage(e.currentTarget.innerHTML)}
-      ></div>
+      ></div> 
+       
 
        { /*attach*/}
         <input type="file" ref={fileInputRef} className="hidden"
@@ -436,6 +479,71 @@ await axios.post(
   onChange={handleImageSelect}
 />
 
+     {/* {showAIReply && (
+  <div className="flex items-center gap-2 ">
+    <input
+      type="text"
+      value={aiPrompt}
+      onChange={e => setAiPrompt(e.target.value)}
+      placeholder="Tell AI how to reply..."
+      className="flex-1 border rounded px-2 py-1 w-full text-sm"
+       //className="w-full max-w-[900px]  px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              
+    />
+
+    <button
+      onClick={handleAIReply}
+      className="bg-blue-500 text-white px-3 py-1 rounded text-sm"
+    >
+      {aiLoading ? "Creating..." : "Create"}
+    </button>
+
+    <button
+      onClick={() => {
+        setShowAIReply(false);
+        setAiPrompt("");
+      }}
+      className="text-sm text-gray-600 hover:text-black"
+    >
+      Cancel
+    </button>
+  </div>
+)} */}
+{/* AI Reply Prompt – FULL WIDTH ROW */}
+{showAIReply && (
+  <div className="px-4 pb-2 w-full">
+    <div className="flex items-center gap-3 w-full">
+      <input
+        type="text"
+        value={aiPrompt}
+        onChange={e => setAiPrompt(e.target.value)}
+        placeholder="Tell AI how to reply…"
+        className="flex-1 min-w-0 px-4 py-2 text-sm border border-gray-300 rounded-lg
+                   focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+
+      <button
+        type="button"
+        onClick={handleAIReply}
+        className="bg-blue-500 text-white px-4 py-2 rounded-md text-sm"
+      >
+        {aiLoading ? "Creating..." : "Create"}
+      </button>
+
+      <button
+      type="button"
+        onClick={() => {
+          setShowAIReply(false);
+          setAiPrompt("");
+        }}
+        className="text-sm text-gray-600 border border-gray-300 px-4 py-2 rounded-md hover:text-black mr-30" 
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+)}
+
 
         {/* Footer toolbar */}
         <div className="flex w-full items-center  px-3 py-2">
@@ -445,11 +553,14 @@ await axios.post(
           >
             Send
           </button>
+        
 
           {/* Optional icons (purely visual for now) */}
-          <div className="flex items-center gap-3 text-gray-500 font-medium text-bold">
+          <div className="flex items-center gap-3 text-gray-500 font-medium text-bold shrink-0">
             <span className="cursor-pointer rounded-full bg-[#D3E3FD] text-[#444746] font-medium p-2">Aa</span>
+
             <span className="cursor-pointer "  onClick={() => fileInputRef.current.click()}><IoMdAttach size={18} color="#444746"/></span>
+
             <span className="cursor-pointer" onClick={() => {
                 const selection = window.getSelection();
                 if (selection.rangeCount > 0) {
@@ -457,6 +568,7 @@ await axios.post(
                  }
                  setShowLinkPopup(true);
               }}><IoLink strokeWidth={2.5} size={18} color="#565857"/></span>
+
             <span className="cursor-pointer"  onClick={() => {
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
@@ -464,7 +576,9 @@ await axios.post(
     }
     setShowEmojiPicker((prev) => !prev);
   }}><MdOutlineEmojiEmotions size={18} color="#444746"/></span>
+
             <span className="cursor-pointer"><DiGoogleDrive size={18} color="#444746"/></span>
+
             <span className="cursor-pointer " onClick={() => {
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
@@ -472,12 +586,18 @@ await axios.post(
     }
     imageInputRef.current.click();
   }} ><GrGallery size={18} color="#444746"/></span>
+
             <span className="cursor-pointer"><BsPenFill size={18} color="#444746"/></span>
+
             <span className="cursor-pointer"><BsThreeDotsVertical size={18} color="#444746"/></span>
+
           </div>
-           <div className="ml-auto">
+           <div className="ml-auto ">
               <span className="cursor-pointer hover:text-black"
-          onClick={() => dispatch(setReplyOpen(false))}><RiDeleteBin6Line  size={18} color="#444746"/></span>
+         // onClick={() => dispatch(setReplyOpen(false))}
+         onClick={closeReply}
+          >
+            <RiDeleteBin6Line  size={18} color="#444746"/></span>
           </div>
         </div>
       </form>

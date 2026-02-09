@@ -21,7 +21,9 @@ import toast from "react-hot-toast";
 import { FaWandMagicSparkles } from "react-icons/fa6";
 import { MdOutlineSummarize } from "react-icons/md";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import ReplyEmail from "./ReplyEmail";
 const Mail=()=>{
+  const { replyOpen } = useSelector(store => store.app);
   const navigate=useNavigate();
   const dispatch = useDispatch();
   const {selectedEmail,user}=useSelector(store=>store.app);
@@ -52,6 +54,7 @@ const summarizeWithAI = async () => {
     setLoadingAI(false);
   }
 };
+
 
   const params=useParams();
   const getTimeAgo = (dateString) => {
@@ -229,18 +232,7 @@ if (selectedEmail?.attachments?.length) {
    <div className="text-black text-sm mt-4 flex justify-between items-center ">
      
      <div>
-      {/* <h1 className="text-black font-semibold">
-            {selectedEmail?.from || selectedEmail?.to}
-            
-      </h1>
-      <div className="text-gray-500 flex items-center gap-2">
-            <span>
-    to {selectedEmail?.to && selectedEmail?.from ? "me" : selectedEmail?.to}
     
-  </span>
-           <FaCaretDown size={15} />
-      </div>
-       */}
 <h1 className="text-black font-semibold">
    
   {selectedEmail?.from}
@@ -248,10 +240,7 @@ if (selectedEmail?.attachments?.length) {
 
 <div className="text-gray-500 flex items-center gap-2">
   <span>
-    {/* to {selectedEmail?.sender === selectedEmail?.from
-      ? selectedEmail?.to
-      : "me"} */}
-
+ 
       to {selectedEmail.mailType === "sent" ? selectedEmail.to : "me"}
 
   </span>

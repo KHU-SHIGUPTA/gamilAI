@@ -57,6 +57,7 @@ const appRouter = createBrowserRouter ([
 ])
 function App() {
   const dispatch = useDispatch();
+  const { replyOpen } = useSelector(store => store.app);
 
 useEffect(() => {
   const params = new URLSearchParams(window.location.search);
@@ -82,9 +83,15 @@ useEffect(() => {
          <SendEmail/>
          <WriteWithAI/>
        </div>
-       <div className="absolute bottom-15 left-75  z-10 right-15">
+       {/* <div className="absolute bottom-15 left-75 h-[300px] z-10 right-15">
            <ReplyEmail />
-      </div>
+      </div> */}
+      {replyOpen && (
+  <div className="fixed  bottom-7 left-75  right-15 z-50 pointer-events-auto">
+    <ReplyEmail />
+  </div> 
+)}
+
 
        <div className='absolute w-[40%] left-90 top-30 z-10'>
         <GenEmail/>

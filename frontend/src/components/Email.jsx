@@ -9,8 +9,14 @@ const Email=({email})=>{
    const navigate=useNavigate();
    const dispatch=useDispatch();
    const openMail=()=>{
-      dispatch(setSelectedEmail(email));
-       navigate(`/mail/${email._id}`);
+      //  navigate(`/mail/${email._id}`);
+      //  dispatch(setSelectedEmail(email));
+
+      const mailId = email._id || email.gmailId;
+
+dispatch(setSelectedEmail(email));
+navigate(`/mail/${mailId}`);
+
    }
 
    const getPreviewText = (html) => {

@@ -120,3 +120,63 @@ ${text}
   }
 };
 
+module.exports.generateReplyWithAI = async (req, res) => {
+  try {
+    const { prompt, email } = req.body;
+
+    if (!prompt || !email) {
+      return res.status(400).json({
+        success: false,
+        message: "Prompt and email context are required"
+      });
+    }
+
+    const attachmentInfo = (email.attachments || [])
+      .map(a => `- ${a.filename}`)
+      .join("\n");
+
+    const aiPrompt = `
+You are an email assistant helping draft professional replies.
+
+TASK:
+Generate a reply email based on the original email and the user instruction.
+
+RULES:
+- Do not repeat the original email
+- Do not include a subject line
+- Keep tone professional and context-aware
+- Respond naturally as a human would
+- Respect the user's instruction exactly
+
+ORIGINAL EMAIL SUBJECT:
+${email.subject}
+
+ORIGINAL EMAIL CONTENT:
+${email.message}
+
+ATTACHMENTS:
+${attachmentInfo || "None"}
+
+USER INSTRUCTION:
+${prompt}
+`;
+console.log("EMAIL RECEIVED:", req.body.email);
+
+    const response = await axios.post(
+      process.env.GEMINI_FLASK_LITE_URL,
+      { prompt: aiPrompt }
+    );
+
+    return res.status(200).json({
+      success: true,
+      text: response.data.text
+    });
+
+  } catch (err) {
+    console.error("AI REPLY ERROR", err);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to generate reply"
+    });
+  }
+};
