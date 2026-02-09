@@ -207,7 +207,24 @@ const handleImageSelect = (e) => {
     }
 
     try {
-      let finalMessage = message;
+     // let finalMessage = message;
+
+    // let finalMessage = message;
+     // 1️⃣ normalize ONLY editor HTML
+const tempDiv = document.createElement("div");
+tempDiv.innerHTML = message;
+
+const normalizedHtml = tempDiv.innerHTML
+  .split(/<br\s*\/?>\s*<br\s*\/?>/gi)
+  .map(block => block.trim())
+  .filter(Boolean)
+  .map(block => `<p>${block}</p>`)
+  .join("");
+
+// 2️⃣ assign normalized HTML as body
+let finalMessage = normalizedHtml;
+
+
 
 const editor = textareaRef.current;
 const imgs = editor.querySelectorAll("img");

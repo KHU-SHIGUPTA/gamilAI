@@ -18,7 +18,8 @@ async function sendUsingGmailAPI(user, to, subject, htmlMessage, files = []) {
   email += `To: ${to}\r\n`;
   email += `Subject: ${subject}\r\n`;
   email += `MIME-Version: 1.0\r\n`;
-  email += `Content-Type: multipart/related; boundary="${boundary}"\r\n\r\n`;
+  // email += `Content-Type: multipart/related; boundary="${boundary}"\r\n\r\n`;
+email += `Content-Type: multipart/related; boundary="${boundary}"; charset="UTF-8"\r\n\r\n`;
 
   // HTML BODY
   email += `--${boundary}\r\n`;

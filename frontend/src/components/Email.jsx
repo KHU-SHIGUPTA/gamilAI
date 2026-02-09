@@ -19,16 +19,28 @@ navigate(`/mail/${mailId}`);
 
    }
 
-   const getPreviewText = (html) => {
+//    const getPreviewText = (html) => {
+//   if (!html) return "";
+
+//   // remove all html tags
+//   let text = html.replace(/<[^>]+>/g, "");
+
+//   // convert &nbsp; and entities
+//   text = text.replace(/&nbsp;/g, " ");
+
+//   return text.trim();
+// };
+
+const getPreviewText = (html, maxLength = 120) => {
   if (!html) return "";
 
-  // remove all html tags
   let text = html.replace(/<[^>]+>/g, "");
-
-  // convert &nbsp; and entities
   text = text.replace(/&nbsp;/g, " ");
+  text = text.replace(/\s+/g, " ").trim();
 
-  return text.trim();
+  return text.length > maxLength
+    ? text.slice(0, maxLength) + "..."
+    : text;
 };
 
 
@@ -70,13 +82,33 @@ const getTimeAgo = (dateString) => {
              </div>
           </div>
 
-          <div className="flex-1 ml-4">
-             {/* <p>{email?.message}</p> */}
+          {/* <div className="flex-1 ml-4">
+             
              <p>{getPreviewText(email?.message)}</p>
                {email?.attachments?.length > 0 && (
                   <span className="text-blue-600">< MdPictureAsPdf size={25} color="black"/></span>
                )}
-          </div>
+          </div> */}
+
+          <div className="flex-1 ml-4">
+  <p
+    className="text-gray-600 text-sm overflow-hidden"
+    style={{
+      display: "-webkit-box",
+      WebkitLineClamp: 2,
+      WebkitBoxOrient: "vertical",
+    }}
+  >
+    {getPreviewText(email?.message)}
+  </p>
+
+  {email?.attachments?.length > 0 && (
+    <span className="text-blue-600">
+      <MdPictureAsPdf size={20} color="black" />
+    </span>
+  )}
+</div>
+
           <div className="flex-none text-gray text-sm">
             <p>{getTimeAgo(email?.createdAt)}</p>
           </div>
