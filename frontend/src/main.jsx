@@ -11,7 +11,9 @@ import { persistStore } from 'redux-persist'
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:8080";
+
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
+
 
 let persistor=persistStore(store)
 createRoot(document.getElementById('root')).render(
