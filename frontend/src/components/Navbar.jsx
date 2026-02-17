@@ -23,7 +23,8 @@ export default function Navbar({ onMenuClick }){
   const navigate=useNavigate();
   const logoutHandler=async()=>{
     try {
-      const res=await axios.get('http://localhost:8080/api/user/logout');
+       const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+      const res=await axios.get(`${BACKEND_URL}/api/user/logout`);
       toast.success(res.data.message);
       dispatch(setAuthUser(null));
       navigate('/login')

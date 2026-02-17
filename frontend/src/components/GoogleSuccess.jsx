@@ -9,10 +9,10 @@ export default function GoogleSuccess() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    
+    const BACKEND_URL=import.meta.env.VITE_BACKEND_URL;
     axios.get(
       // "http://localhost:8080/api/email/getAllEmail"
-      "http://localhost:8080/api/auth/me"
+      `${BACKEND_URL}/api/auth/me`
       , {
       withCredentials: true
     })

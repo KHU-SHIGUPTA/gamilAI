@@ -15,7 +15,8 @@ import toast from "react-hot-toast";
     const submitHandler= async(e)=>{
         e.preventDefault();
         try {
-            const res=await axios.post("http://localhost:8080/api/user/register",input,{
+            const BACKEND_URL=import.meta.env.VITE_BACKEND_URL;
+            const res=await axios.post(`${BACKEND_URL}/api/user/register`,input,{
                 headers:{
                    'content-Type':"application/json"
                 },

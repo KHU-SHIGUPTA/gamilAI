@@ -28,14 +28,6 @@ const ReplyEmail = () => {
   const { replyOpen,selectedEmail,user } = useSelector(
     (store) => store.app
   );
-//   useEffect(() => {
-//   if (selectedEmail) {
-//     // reset AI state when user opens a different email
-//     setMessage("");
-//     setAiPrompt("");
-//     setShowAIReply(false);
-//   }
-// }, [selectedEmail?._id]);
 
 useEffect(() => {
   if (selectedEmail) {
@@ -57,9 +49,9 @@ const handleAIReply = async () => {
   toast.error("Please enter a prompt for AI");
   return;
 }
-
+  const BACKEND_URL=import.meta.env.VITE_BACKEND_URL;
     const res = await axios.post(
-      "http://localhost:8080/api/ai/reply",
+      `${BACKEND_URL}/api/ai/reply`,
       {
         prompt: aiPrompt,
         email: {
@@ -242,9 +234,9 @@ form.append("subject", `Re: ${selectedEmail.subject}`);
 form.append("message",finalMessage);
 
 attachments.forEach(file => form.append("attachments", file));
-
+const BACKEND_URL=import.meta.env.VITE_BACKEND_URL;
 await axios.post(
-  "http://localhost:8080/api/email/create",
+  `${BACKEND_URL}/api/email/create`,
   form,
   {
     withCredentials: true,

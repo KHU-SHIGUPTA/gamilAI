@@ -14,31 +14,6 @@ const Body=()=>{
      }
    },[])
   return(
-  
-//     <div className="h-screen flex flex-col overflow-hidden">
-//   {/* Navbar fixed */}
-//   <Navbar />
-
-//   <div className="flex flex-1 overflow-hidden">
-//     {/* Sidebar fixed */}
-//       {/* <SideBar /> */}
-//  <div className="hidden md:block">
-//     <SideBar />
-//   </div>
-  
-
-//     {/* Main content scrolls */}
-//     <div className="flex-1 overflow-y-auto">
-//       <Outlet />
-//     </div>
-//   </div>
-// </div>
-
-
-
-  
-
-
     <div className="h-screen flex flex-col overflow-hidden">
       <Navbar onMenuClick={() => setIsSidebarOpen(true)} />
 

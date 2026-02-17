@@ -207,9 +207,9 @@ setShowLinkPopup(false);
 
     console.log("FINAL MESSAGE BEFORE SEND ===>", finalMessage);
 for (let p of form.entries()) console.log("FORM DATA ===>", p);
-
+  const BACKEND_URL=import.meta.env.VITE_BACKEND_URL;
     const res = await axios.post(
-      "http://localhost:8080/api/email/create",
+      `${BACKEND_URL}/api/email/create`,
       form,
       {
         withCredentials: true,

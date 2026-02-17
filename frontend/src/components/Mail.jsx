@@ -36,9 +36,9 @@ const summarizeWithAI = async () => {
   try {
     setLoadingAI(true);
     setSummary("");
-
+   const BACKEND_URL=import.meta.env.VITE_BACKEND_URL;
     const res = await axios.post(
-      "http://localhost:8080/api/ai/summarize",
+      `${BACKEND_URL}/api/ai/summarize`,
       { text: selectedEmail.message },
       { withCredentials: true }
     );
@@ -83,9 +83,10 @@ const summarizeWithAI = async () => {
   const deleteHandler = async () => {
   try {
     // ⭐ Manual DB email
+    const BACKEND_URL=import.meta.env.VITE_BACKEND_URL;
     if (selectedEmail?._id) {
       const res = await axios.delete(
-        `http://localhost:8080/api/email/${selectedEmail._id}`,
+        `${BACKEND_URL}/api/email/${selectedEmail._id}`,
         { withCredentials: true }
       );
 
@@ -97,7 +98,7 @@ const summarizeWithAI = async () => {
     // ⭐ Gmail Email
     if (selectedEmail?.gmailId) {
       const res = await axios.delete(
-        `http://localhost:8080/api/email/none`,
+        `${BACKEND_URL}/api/email/none`,
         {
           withCredentials: true,
           data: {
@@ -120,7 +121,7 @@ const summarizeWithAI = async () => {
 };
 
 
- const BASE_URL = "http://localhost:8080";
+ const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 let emailHTML = selectedEmail?.message || "";
 
@@ -298,7 +299,7 @@ if (selectedEmail?.attachments?.length) {
 
       <div className="flex gap-4 flex-wrap">
         {selectedEmail.attachments.map((file, index) => {
-          const url = `http://localhost:8080/${file.path}`;
+          const url = `${BASE_URL}/${file.path}`;
 
           return (
             <a

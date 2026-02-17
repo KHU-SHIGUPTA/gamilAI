@@ -27,46 +27,7 @@ module.exports.register=async(req,res)=>{
      console.log(error)
   }
 }
-//old
-// module.exports.login=async(req,res)=>{
-//     try{
-//         const {email,password}=req.body;
-//         if(!email||!password){
-//             return res.status(400).json({message:"All fields are require",success:false})
-//          }
-//         // const user=await User.findOne({email});
-//        const user=await User.findOneAndUpdate(
-//               { email: data.email },
-//               {
-//                 name: data.name,
-//                email: data.email,
-//                picture: data.picture,
-//                googleRefreshToken: tokens.refresh_token
-//               },
-//               { upsert: true }
-//            );
 
-//         if(!user){
-//             return res.status(400).json({message:"Incorrect email or password",success:false})
-//         }
-//         const isPasswordMatch=await bycrpt.compare(password,user.password);
-//         if(!isPasswordMatch){
-//              return res.status(400).json({message:"Incorrect email or password",success:false})
-//         }
-//         const tokendata={
-//             userId:user._id
-//         }
-//         const token=await jwt.sign(tokendata,process.env.Secret_KEY,{expiresIn:"1d"})
-//         res.status(200).cookie('token',token,{maxAge:1*24*60*60*1000,httpOnly:true,sameSite:'strict'}).json({
-//             user,
-//             message:`${user.fullname} logged in successfully`,
-//             success:true
-//         })
-//     }
-//     catch(error){
-//       console.log(error);
-//     }
-// }
 
 module.exports.login = async (req, res) => {
   try {

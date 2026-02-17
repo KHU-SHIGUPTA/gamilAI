@@ -32,9 +32,9 @@ export default function WriteWithAI() {
 
     try {
       setLoading(true);
-
+    const BACKEND_URL=import.meta.env.VITE_BACKEND_URL;
       const res = await axios.post(
-        "http://localhost:8080/api/ai/generate", // backend endpoint you just created
+        `${BACKEND_URL}/api/ai/generate`, // backend endpoint you just created
         { prompt },
         { withCredentials: true } // important: cookies for isAuthenticated
       );

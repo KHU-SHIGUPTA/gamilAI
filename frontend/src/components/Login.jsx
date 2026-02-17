@@ -20,7 +20,8 @@ import { setAuthUser } from "../redux/appSlice";
     const submitHandler= async(e)=>{
         e.preventDefault();
         try {
-            const res=await axios.post("http://localhost:8080/api/user/login",input,{
+            const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+            const res=await axios.post(`${BACKEND_URL}/api/user/login`,input,{
                 headers:{
                    'Content-Type': "application/json"
                 },
@@ -38,7 +39,8 @@ import { setAuthUser } from "../redux/appSlice";
     }
     //login with login
     const loginWithGoogle = () => {
-       window.location.href = "http://localhost:8080/auth/google";
+          const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+       window.location.href = `${BACKEND_URL}/auth/google`;
     };
 
      return(

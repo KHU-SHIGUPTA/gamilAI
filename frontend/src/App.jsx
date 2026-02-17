@@ -62,9 +62,9 @@ function App() {
 useEffect(() => {
   const params = new URLSearchParams(window.location.search);
   const logged = params.get("logged");
-
+  const BACKEND_URL=import.meta.env.VITE_BACKEND_URL;
   if (logged === "google") {
-    axios.get("http://localhost:8080/api/email/getAllEmail", {
+    axios.get(`${BACKEND_URL}/api/email/getAllEmail`, {
       withCredentials: true
     })
     .then(() => {
