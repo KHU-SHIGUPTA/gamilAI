@@ -66,7 +66,9 @@ router.get("/google/callback", async (req, res) => {
       secure:false,  
       path: "/",               // <<< IMPORTANt
     });
-   return res.redirect("http://localhost:5173/google-success");
+  //  return res.redirect("http://localhost:5173/google-success");
+  return res.redirect(process.env.FRONTEND_URL + "/google-success");
+
   } catch (err) {
     console.log("AUTH ERROR", err.response?.data || err);
     res.status(500).send("Google Authentication Failed");
