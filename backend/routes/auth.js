@@ -60,12 +60,19 @@ router.get("/google/callback", async (req, res) => {
        {expiresIn: "7d" }
     );
 
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   sameSite: "lax",
+    //   secure:false,  
+    //   path: "/",               // <<< IMPORTANt
+    // });
+
     res.cookie("token", token, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure:false,  
-      path: "/",               // <<< IMPORTANt
-    });
+  httpOnly: true,
+  sameSite: "none",
+  secure: true,
+  path: "/",
+});
   //  return res.redirect("http://localhost:5173/google-success");
   return res.redirect(process.env.FRONTEND_URL + "/google-success");
 

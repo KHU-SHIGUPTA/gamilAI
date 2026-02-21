@@ -19,7 +19,7 @@ app.use(cookieParser())
     // origin:'http://localhost:5173',
   origin: [
     "http://localhost:5173",
-    "https://gamil-ai.vercel.app/"
+    "https://gamil-ai.vercel.app"
   ],
     credentials:true
  }

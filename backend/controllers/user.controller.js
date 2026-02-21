@@ -60,14 +60,22 @@ module.exports.login = async (req, res) => {
       { expiresIn: "1d" }
     );
 
+    // res
+    //   .status(200)
+    //   .cookie("token", token, {
+    //     httpOnly: true,
+    //     //checking
+    //     sameSite: "strict",
+    //     maxAge: 24 * 60 * 60 * 1000
+    //   })
     res
-      .status(200)
-      .cookie("token", token, {
-        httpOnly: true,
-        //checking
-        sameSite: "strict",
-        maxAge: 24 * 60 * 60 * 1000
-      })
+  .status(200)
+  .cookie("token", token, {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+    maxAge: 24 * 60 * 60 * 1000
+  })
       .json({
         user,
         message: `${user.fullname} logged in successfully`,
@@ -83,7 +91,14 @@ module.exports.login = async (req, res) => {
 
 module.exports.logout=async(req,res)=>{
     try{
-          return res.status(200).cookie("token","",{maxAge:0}).json({
+          // return res.status(200).cookie("token","",{maxAge:0})
+          return res.status(200).cookie("token","",{
+  maxAge:0,
+  httpOnly:true,
+  sameSite:"none",
+  secure:true
+})
+          .json({
             message:"logged out successfully"
           })
     }
